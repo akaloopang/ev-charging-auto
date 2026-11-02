@@ -1,0 +1,148 @@
+{
+  "packageName": "com.akaloopang.evauto",
+  "appDescription": "An EV charging ledger that automatically records charging sessions, calculates charging costs from per-station unit prices, compares them with a gasoline car, and guides the driver to stations used before.",
+  "invokeWord": "충전기록",
+  "version": "0.2.0",
+  "actionCalls": [
+    {
+      "type": "function",
+      "function": {
+        "name": "SET_CHARGING_UNIT_PRICE",
+        "description": "Save the electricity unit price per kWh for the charging station just used, the apartment home charger, or a charging operator. Prices differ by charger power tier, so include the charger's rated power when the user mentions it.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "unitPrice": {
+              "type": "number",
+              "description": "Charging price in Korean won per kWh. Use 0 only when the user says the station just used is free of charge."
+            },
+            "target": {
+              "type": "string",
+              "description": "Where the price applies: this_station for the station just used, apartment for the home apartment charger, or the name of a charging operator."
+            },
+            "chargingSpeed": {
+              "type": "string",
+              "description": "Charger speed class the price belongs to (slow = AC, fast = DC, ultra_fast = high-power DC). Use chargerKw instead when the user says the charger power.",
+              "enum": [
+                "slow",
+                "fast",
+                "ultra_fast"
+              ]
+            },
+            "chargerKw": {
+              "type": "number",
+              "description": "Rated power of the charger in kW as written on the charger, for example 7, 50, 100, 200 or 350. The price is saved to that power tier."
+            }
+          },
+          "required": [
+            "unitPrice"
+          ]
+        },
+        "component": "service"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "SETTLE_APARTMENT_CHARGING_BILL",
+        "description": "Apply the monthly EV charging fee from the apartment maintenance bill to that month's home charging records.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "description": "EV charging fee on the apartment maintenance bill in Korean won."
+            },
+            "month": {
+              "type": "string",
+              "description": "Billing month in YYYY-MM format."
+            }
+          },
+          "required": [
+            "amount"
+          ]
+        },
+        "component": "service"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "GET_CHARGING_COST_SUMMARY",
+        "description": "Tell the total EV charging cost and number of charging sessions for a month.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "month": {
+              "type": "string",
+              "description": "Month in YYYY-MM format."
+            }
+          },
+          "required": []
+        },
+        "component": "service"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "GET_CHARGING_SAVINGS",
+        "description": "Tell how much money the driver saved on charging compared with driving a gasoline or diesel car the same distance, based on recorded charging costs and odometer readings.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "month": {
+              "type": "string",
+              "description": "Month in YYYY-MM format. Omit for the total of all records."
+            }
+          },
+          "required": []
+        },
+        "component": "service"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "NAVIGATE_TO_CHARGING_STATION",
+        "description": "Start navigation to a charging station the driver has used before, chosen from the charging records: the cheapest one, the most visited one, the last one, or one matching a spoken name.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "which": {
+              "type": "string",
+              "description": "How to choose the station.",
+              "enum": [
+                "cheapest",
+                "most_visited",
+                "last",
+                "name"
+              ]
+            },
+            "stationName": {
+              "type": "string",
+              "description": "Part of the station name or operator when which is name, for example a branch name."
+            }
+          },
+          "required": [
+            "which"
+          ]
+        },
+        "component": "service"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "GET_EXPECTED_CHARGING_COST",
+        "description": "Estimate the charging cost at the charging station currently set as the navigation destination or waypoint, using the navigation charging plan and the unit price known for that station.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "component": "service"
+      }
+    }
+  ]
+}

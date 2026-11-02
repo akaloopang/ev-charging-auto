@@ -1,0 +1,18 @@
+*.iml
+.gradle/
+local.properties
+/.idea/
+.DS_Store
+build/
+/captures/
+.externalNativeBuild/
+.cxx/
+*.jks
+*.keystore
+keystore.properties
+# 접수양식(개인정보 포함)은 저장소에 올리지 않는다
+*.docx
+.kotlin/
+
+# 개인 메모
+GITHUB_올리기.txt

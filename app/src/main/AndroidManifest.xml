@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.type.automotive" android:required="true" />
+
+    <!-- Pleos Vehicle SDK: EvBattery(SOC·전비), Odometer(주행거리) -->
+    <uses-permission android:name="pleos.car.permission.CAR_ENERGY" />
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />
+    <!-- Pleos NaviHelper: 목적지 충전소 정보·충전 계획 조회(NAVI_ROUTE), 기록 속 충전소로 길안내 요청(NAVI_ROUTE_SEARCH) -->
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE_SEARCH" />
+    <!-- Pleos SpeechToText / TextToSpeech: 말로 단가 입력·확인 읽어 주기 (ON_DEVICE) -->
+    <uses-permission android:name="pleos.car.permission.STT_SERVICE" />
+    <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />
+
+    <!-- AAOS Vehicle Property: 충전 상태·출력·배터리 잔량(CAR_ENERGY, 런타임 권한),
+         충전 포트(CAR_ENERGY_PORTS), 배터리 용량(CAR_INFO), 시동 상태(CAR_POWERTRAIN) -->
+    <uses-permission android:name="android.car.permission.CAR_ENERGY" />
+    <uses-permission android:name="android.car.permission.CAR_ENERGY_PORTS" />
+    <uses-permission android:name="android.car.permission.CAR_INFO" />
+    <uses-permission android:name="android.car.permission.CAR_POWERTRAIN" />
+
+    <!-- 집 충전기 인식 (위치는 기기 밖으로 보내지 않는다) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- 공공데이터(충전소 정보·빈 충전기)와 오피넷 평균 유가 조회 — 사용자가 키를 넣었을 때만.
+         내 위치는 보내지 않고 시·도 단위 목록을 받아 기기 안에서 찾는다 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- 시동 ON(헤드유닛 부팅) 때 밤사이 충전을 찾아 기록 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:name=".EvAutoApp"
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <!-- 주행 중에도 열 수 있다. 주행 중에는 요약만 보이고 입력은 막는다(UX 제한 준수). -->
+            <meta-data android:name="distractionOptimized" android:value="true" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Gleo AI(플레오스 음성 비서) 연동: assets/schema.json 의 function 이름과 같은 action -->
+        <receiver
+            android:name=".voice.GleoActionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="SET_CHARGING_UNIT_PRICE" />
+                <action android:name="SETTLE_APARTMENT_CHARGING_BILL" />
+                <action android:name="GET_CHARGING_COST_SUMMARY" />
+                <action android:name="GET_CHARGING_SAVINGS" />
+                <action android:name="NAVIGATE_TO_CHARGING_STATION" />
+                <action android:name="GET_EXPECTED_CHARGING_COST" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".monitor.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

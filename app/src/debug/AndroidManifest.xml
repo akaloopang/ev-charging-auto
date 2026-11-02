@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 디버그 빌드만: 일반 휴대폰 AVD에도 설치해 화면을 확인할 수 있게 차량 전용 표시를 '선택'으로 바꾼다.
+     릴리스(제출용)는 src/main 그대로 차량 전용(required=true). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-feature
+        android:name="android.hardware.type.automotive"
+        android:required="false"
+        tools:replace="android:required" />
+</manifest>
