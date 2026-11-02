@@ -180,3 +180,5 @@ Virtual Console(2.1.0)의 Energy 항목은 Battery SOC·Battery Energy·Charge S
 ## 저작권
 
 © 2026 one&only. All rights reserved. 현대자동차그룹 차량용 앱 개발 공모전 심사를 위해 공개한 저장소입니다.
+#   e v - c h a r g i n g - a u t o  
+ 
